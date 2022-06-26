@@ -73,12 +73,13 @@ jobs:
 
     - name: Create release
       id: create_release
-      uses: ncipollo/release-action@v1.8.0
+      uses: ncipollo/release-action@v1.10.0
       with:
         name: OpenWRT-${{ env.latest_release }}
         allowUpdates: true
         tag: ${{ env.latest_release }}
         commit: master
+        prerelease: true
         replacesArtifacts: true
         token: ${{ secrets.workflow_token }}
         artifacts: rom/*
