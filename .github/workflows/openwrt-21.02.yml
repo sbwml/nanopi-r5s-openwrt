@@ -58,7 +58,6 @@ jobs:
     - name: Compile Openwrt
       id: compileopenwrt
       run: |
-        cd ~
         bash <(curl -sS ${{ secrets.script_url }}) stable
         cd openwrt
         tags=$(git describe --abbrev=0 --tags)
@@ -67,10 +66,10 @@ jobs:
     - name: Assemble Artifact
       id: assemble_artifact
       run: |
-        mkdir -p ~/rom
-        cp -a ~/img/out/*.img.gz ~/rom
-        cp -a ~/img/out/*.zip ~/rom
-        cp -a ~/img/out/*txt ~/rom
+        mkdir -p rom
+        cp -a img/out/*.gz rom/
+        cp -a img/out/*.zip rom/
+        cp -a img/out/*txt rom/
 
     - name: Create release
       id: create_release
@@ -82,4 +81,4 @@ jobs:
         commit: master
         replacesArtifacts: true
         token: ${{ secrets.workflow_token }}
-        artifacts: ~/rom/*
+        artifacts: rom/*
