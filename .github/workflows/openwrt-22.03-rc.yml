@@ -85,19 +85,21 @@ jobs:
         token: ${{ secrets.workflow_token }}
         artifacts: rom/*
 
-    - name: Upload Firmware - AliyunDrive
-      id: upload-aliyundrive
+    - name: AliyunDrive Binary
+      id: aliyundrive
+      continue-on-error: true
       run: |
-        # AliyunDrive Binary
         sudo curl -L ${{ secrets.aliyundrive }} -o /bin/aliyundrive --progress-bar
         sudo chmod 0755 /bin/aliyundrive
         # Get RefreshToken
         aliyun_token=`curl -s ${{ secrets.aliyun_token }}`
         echo "refresh_token: '$aliyun_token'" > ~/.config/aliyunpan.yaml
-        # Upload
-        version=$(cat openwrt/version.txt)
 
-        # hash
+    - name: Upload Firmware - hash
+      id: upload-hash
+      continue-on-error: true
+      run: |
+        # Upload to hash dir
         aliyundrive upload --retry 10 -f rom/manifest.txt nanopi-r5s/hash/
         aliyundrive upload --retry 10 -f rom/config.buildinfo nanopi-r5s/hash/
         aliyundrive upload --retry 10 -f rom/sha256sums.txt nanopi-r5s/hash/
@@ -105,7 +107,12 @@ jobs:
         aliyundrive upload --retry 10 -f rom/*-r5s-squashfs-sysupgrade.img.gz nanopi-r5s/hash/
         aliyundrive upload --retry 10 -f rom/*-r5s-ext4-sysupgrade.img.gz nanopi-r5s/hash/
 
-        # r5s.cooluc.com
+    - name: Upload Firmware - candidate
+      id: upload-firmware
+      continue-on-error: true
+      run: |
+        # Upload to candidate dir
+        version=$(cat openwrt/version.txt)
         aliyundrive mkdir nanopi-r5s/candidate/$version
         aliyundrive upload -f rom/manifest.txt nanopi-r5s/candidate/$version/
         aliyundrive upload -f rom/config.buildinfo nanopi-r5s/candidate/$version/
