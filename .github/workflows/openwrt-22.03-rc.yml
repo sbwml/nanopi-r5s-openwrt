@@ -96,10 +96,20 @@ jobs:
         echo "refresh_token: '$aliyun_token'" > ~/.config/aliyunpan.yaml
         # Upload
         version=$(cat openwrt/version.txt)
+
+        # hash
+        aliyundrive upload --retry 10 -f rom/manifest.txt nanopi-r5s/hash/
+        aliyundrive upload --retry 10 -f rom/config.buildinfo nanopi-r5s/hash/
+        aliyundrive upload --retry 10 -f rom/sha256sums.txt nanopi-r5s/hash/
+        aliyundrive upload --retry 10 -f rom/*-r5s-emmc.img.zip nanopi-r5s/hash/
+        aliyundrive upload --retry 10 -f rom/*-r5s-squashfs-sysupgrade.img.gz nanopi-r5s/hash/
+        aliyundrive upload --retry 10 -f rom/*-r5s-ext4-sysupgrade.img.gz nanopi-r5s/hash/
+
+        # r5s.cooluc.com
         aliyundrive mkdir nanopi-r5s/candidate/$version
-        aliyundrive upload --retry 10 -f rom/manifest.txt nanopi-r5s/candidate/$version/
-        aliyundrive upload --retry 10 -f rom/config.buildinfo nanopi-r5s/candidate/$version/
-        aliyundrive upload --retry 10 -f rom/sha256sums.txt nanopi-r5s/candidate/$version/
-        aliyundrive upload --retry 10 -f rom/*-r5s-emmc.img.zip nanopi-r5s/candidate/$version/
-        aliyundrive upload --retry 10 -f rom/*-r5s-squashfs-sysupgrade.img.gz nanopi-r5s/candidate/$version/
-        aliyundrive upload --retry 10 -f rom/*-r5s-ext4-sysupgrade.img.gz nanopi-r5s/candidate/$version/
+        aliyundrive upload -f rom/manifest.txt nanopi-r5s/candidate/$version/
+        aliyundrive upload -f rom/config.buildinfo nanopi-r5s/candidate/$version/
+        aliyundrive upload -f rom/sha256sums.txt nanopi-r5s/candidate/$version/
+        aliyundrive upload -f rom/*-r5s-emmc.img.zip nanopi-r5s/candidate/$version/
+        aliyundrive upload -f rom/*-r5s-squashfs-sysupgrade.img.gz nanopi-r5s/candidate/$version/
+        aliyundrive upload -f rom/*-r5s-ext4-sysupgrade.img.gz nanopi-r5s/candidate/$version/
